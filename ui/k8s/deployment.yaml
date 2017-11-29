@@ -58,4 +58,4 @@ spec:
             cpu: {{build.profile.max_cpu}}
         ports:
         - name: http-api
-          containerPort: 5000
+          containerPort: 3000

@@ -9,7 +9,9 @@ RUN npm install
 COPY public public
 COPY src src
 
-RUN npm run build --production
-RUN npm install -g serve
+ENTRYPOINT ["npm", "start"]
 
-ENTRYPOINT ["serve", "-s", "build"]
+#RUN npm run build --production
+#RUN npm install -g serve
+
+#ENTRYPOINT ["serve", "-s", "build"]
