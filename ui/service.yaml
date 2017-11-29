@@ -1,7 +1,7 @@
 {% set sanitized_branch = (branch or "dev").replace('/', '-') %}
 
 name: ui
-namespace dashboard
+namespace: dashboard
 
 profiles:
   stable:
