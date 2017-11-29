@@ -1,6 +1,6 @@
 {% set sanitized_branch = (branch or "dev").replace('/', '-') %}
 
-name: dashboard
+name: api
 namespace: dashboard
 
 profiles:
