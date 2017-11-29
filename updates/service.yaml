@@ -1,23 +1,23 @@
 {% set sanitized_branch = (branch or "dev").replace('/', '-') %}
 
-name: goals
+name: updates
 namespace: dashboard
 
 profiles:
   stable:
     host: dashboard.k736.net
-    endpoint: /goals
+    endpoint: /updates
     max_memory: 0.4G
     max_cpu: 0.5
   canary:
     host: dashboard.k736.net
-    endpoint: /goals
+    endpoint: /updates
     weight: 10 # percentage of traffic to route to this class of deployment
     max_memory: 0.2G
     max_cpu: 0.25
   default:
     name: {{sanitized_branch}}
     host: {{sanitized_branch}}-dashboard.k736.net
-    endpoint: /goals
+    endpoint: /updates
     max_memory: 0.2G
     max_cpu: 0.25
