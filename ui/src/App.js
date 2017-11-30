@@ -63,7 +63,7 @@ const GridExampleCelled = () => (
 
     <Grid.Row>
       <Grid.Column width={3}>
-        <Poller endpoint="metrics"/>
+        <Poller endpoint="updates"/>
       </Grid.Column>
       <Grid.Column width={10}>
         <Poller endpoint="api"/>
