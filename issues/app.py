@@ -8,17 +8,12 @@ sys.path.append("/config")
 
 import config
 
-START = time.time()
-
-def elapsed():
-    running = time.time() - START
-    minutes, seconds = divmod(running, 60)
-    hours, minutes = divmod(minutes, 60)
-    return "%d:%02d:%02d" % (hours, minutes, seconds)
+def issues():
+    return 5
 
 @app.route('/')
 def root():
-    return "Metrics (up %s, %s)\n" % (elapsed(), config.build)
+    return "Issues: %s" % issues()
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8080)

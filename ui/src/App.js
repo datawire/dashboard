@@ -53,10 +53,11 @@ const GridExampleCelled = () => (
   <Grid celled>
     <Grid.Row>
       <Grid.Column width={3}>
-        <Poller endpoint="goals"/>
+        Average service latency
       </Grid.Column>
       <Grid.Column width={13}>
-        <Poller endpoint="api"/>
+        Number of open GitHub issues:
+        <Poller endpoint="issues"/>
       </Grid.Column>
     </Grid.Row>
 
