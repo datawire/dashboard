@@ -21,3 +21,6 @@ profiles:
     endpoint: /updates
     max_memory: 0.2G
     max_cpu: 0.25
+
+branches:
+  master: stable

@@ -21,3 +21,6 @@ profiles:
     endpoint: /
     max_memory: 0.7G
     max_cpu: 0.5
+
+branches:
+  master: stable
