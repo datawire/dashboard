@@ -3,7 +3,7 @@ import logo from './jetpack.svg';
 import './App.css';
 
 import 'semantic-ui-css/semantic.min.css';
-import { Card, Grid, Image } from 'semantic-ui-react';
+import { Card, Grid, Image, Table } from 'semantic-ui-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 class Metrics extends React.Component {
@@ -19,6 +19,8 @@ class Metrics extends React.Component {
   componentDidMount() {
     fetch("/api/metrics", {credentials: "same-origin"}).then(response => response.json()).then(data => {
       this.setState(prev => data);
+    }).catch(error => {
+      console.log(error);
     });
   }
 
@@ -67,6 +69,79 @@ class Metrics extends React.Component {
   }
 }
 
+class Meter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      "profile": "stable",
+      "routes": {}
+    }
+    this.active = false;
+  }
+
+  componentDidMount() {
+    this.active = true;
+    this.poll();
+  }
+
+  componentWillUnmount() {
+    this.active = false;
+  }
+
+  poll() {
+    fetch("/api/meter", {credentials: "same-origin"}).then(response => response.json()).then(data => {
+      this.setState(prev => data);
+      if (this.active) {
+        setTimeout(() => this.poll(), 1000);
+      }
+    }).catch(error => {
+      console.log(error);
+      if (this.active) {
+        setTimeout(() => this.poll(), 1000);
+      }
+    });
+  }
+
+  render() {
+    var rows = [];
+    var keys = Object.keys(this.state.routes);
+    keys.sort();
+
+    for (var i = 0; i < keys.length; i++) {
+      var route = this.state.routes[keys[i]];
+      var clusters = route.clusters;
+      var ckeys = Object.keys(clusters);
+      ckeys.sort();
+      for (var j = 0; j < ckeys.length; j++) {
+        var cluster = clusters[ckeys[j]];
+        rows.push(
+          <Table.Row>
+            <Table.Cell>{keys[i]}</Table.Cell>
+            <Table.Cell>{ckeys[j]}</Table.Cell>
+            <Table.Cell>{cluster.weight}</Table.Cell>
+            <Table.Cell>{cluster.count}</Table.Cell>
+          </Table.Row>
+        );
+      }
+    }
+
+    return (
+  <Table striped>
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell>URL</Table.HeaderCell>
+        <Table.HeaderCell>Cluster</Table.HeaderCell>
+        <Table.HeaderCell>Weight</Table.HeaderCell>
+        <Table.HeaderCell>Count</Table.HeaderCell>
+      </Table.Row>
+    </Table.Header>
+
+    <Table.Body>{rows}</Table.Body>
+  </Table>
+    );
+  }
+}
+
 class Poller extends React.Component {
   constructor(props) {
     super(props);
@@ -103,6 +178,24 @@ class Poller extends React.Component {
     });
   }
 
+  latency(responses, profile) {
+    var sum = 0;
+    var count = 0;
+    for (var j = 0; j < responses.length; j++) {
+      var response = responses[j];
+      if (response.body.indexOf(profile) != -1) {
+        sum += response.latency;
+        count += 1;
+      }
+    }
+    if (count) {
+      var avg = (sum/count).toFixed(2);
+      return avg;
+    } else {
+      return "-"
+    }
+  }
+
   render() {
     var items = [];
     for (var i = this.state.responses.length - 1; i >= 0; i--) {
@@ -112,19 +205,14 @@ class Poller extends React.Component {
       }
     }
 
-    var sum = 0;
-    var count = this.state.responses.length;
-    for (var j = 0; j < count; j++) {
-      var response = this.state.responses[j];
-      sum += response.latency;
-    }
-    var avg = (sum/count).toFixed(2);
+    var stable = this.latency(this.state.responses, "stable");
+    var canary = this.latency(this.state.responses, "canary");
 
     return (
-        <Card>
-        <Card.Content header>{this.props.endpoint}</Card.Content>
-        <Card.Content description>{items}</Card.Content>
-        <Card.Content extra>latency: {avg}</Card.Content>
+        <Card centered>
+          <Card.Content header>{this.props.endpoint}</Card.Content>
+          <Card.Content description>{items}</Card.Content>
+          <Card.Content extra>latency: {stable}, {canary}</Card.Content>
         </Card>
     );
   }
@@ -145,14 +233,11 @@ const GridExampleCelled = () => (
     </Grid.Row>
 
     <Grid.Row>
-      <Grid.Column width={5}>
-        <Poller endpoint="updates"/>
+      <Grid.Column width={10}>
+        <Meter/>
       </Grid.Column>
       <Grid.Column width={5}>
         <Poller endpoint="api"/>
-      </Grid.Column>
-      <Grid.Column width={5}>
-        <Poller endpoint="issues"/>
       </Grid.Column>
     </Grid.Row>
   </Grid>
