@@ -25,6 +25,7 @@ def elapsed():
 
 @app.route('/')
 def root():
+    # time.sleep(0.5)
     return random.choice(goals)
 
 if __name__ == "__main__":
