@@ -4,10 +4,6 @@ import os, sys, time
 from flask import Flask
 app = Flask(__name__)
 
-sys.path.append("/config")
-
-import config
-
 START = time.time()
 
 def elapsed():
@@ -18,7 +14,7 @@ def elapsed():
 
 @app.route('/')
 def root():
-    return "Hello World (Python)! (up %s, %s)\n" % (elapsed(), config.build)
+    return "Hello World (Python)! (up %s, %s)\n" % (elapsed(), os.environ.get("BUILD_PROFILE", "none"))
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8080)

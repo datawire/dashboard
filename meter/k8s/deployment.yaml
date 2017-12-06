@@ -54,6 +54,9 @@ spec:
     spec:
       containers:
       - name: {{build.name}}
+        env:
+         - name: BUILD_PROFILE
+           value: {{build.profile.name}}
         image: {{build.images["Dockerfile"]}}
         imagePullPolicy: Always
         resources:
@@ -66,19 +69,3 @@ spec:
         ports:
         - name: http-api
           containerPort: 8080
-        volumeMounts:
-        - mountPath: "/config"
-          name: config-volume
-      volumes:
-      - configMap:
-          name: {{build.name}}-config
-        name: config-volume
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{build.name}}-config
-  namespace: {{service.namespace}}
-data:
-  config.py: |
-    build = "{{build.name}}"
