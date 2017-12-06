@@ -22,13 +22,6 @@ metadata:
       {%- if "weight" in build.profile %}
       weight: {{build.profile.weight}}
       {%- endif %}
-      ---
-      apiVersion: ambassador/v0
-      kind: Mapping
-      name: {{build.name}}-metrics-mapping
-      host: {{build.profile.host}}
-      prefix: {{build.profile.endpoint}}/metrics
-      service: ghas-stable.{{service.namespace}}
   {%- endif %}
 spec:
   selector:
