@@ -9,7 +9,7 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 
 ambassador_url = "http://ambassador-admin-stable.argonath:8877/ambassador/v0/diag/?json=true"
-prometheus_url = "http://prometheus-stable.prometheus/api/v1/query?query=ambassador_cluster_count"
+prometheus_url = "http://prometheus-stable.prometheus/api/v1/query?query=ambassador_cluster_latency_count"
 
 def fetch(url):
     r = None
