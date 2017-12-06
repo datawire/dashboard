@@ -1,2 +1,4 @@
 .forge
 forge.yaml
+*~
+telepresence.log
