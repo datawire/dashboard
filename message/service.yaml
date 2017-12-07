@@ -1,27 +1,28 @@
 {% set sanitized_branch = (branch or "dev").replace('/', '-') %}
 {% set host_to_route = 'fdash.k736.net' %}
 
-name: meter
+name: message
 namespace: dashboard
 
 profiles:
   stable:
     host: {{host_to_route}}
-    endpoint: /api/meter
-    max_memory: 0.5G
-    max_cpu: 0.5
+    endpoint: /message
+    max_memory: 0.25G
+    max_cpu: 0.25
   canary:
     host: {{host_to_route}}
-    endpoint: /api/meter
-    weight: 10 # percentage of traffic to route to this class of deployment
+    endpoint: /message
+    weight: 50 # percentage of traffic to route to this class of deployment
     max_memory: 0.25G
     max_cpu: 0.25
   default:
     name: {{sanitized_branch}}
     host: {{sanitized_branch}}-{{host_to_route}}
-    endpoint: /api/meter
-    max_memory: 0.25G
-    max_cpu: 0.25
+    endpoint: /message
+    max_memory: 0.1G
+    max_cpu: 0.1
 
 branches:
   master: stable
+  dev/*: default

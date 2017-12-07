@@ -1,7 +1,14 @@
 #!/usr/bin/python
 
-import os, sys, time
+import sys
+
+import os
+import time
+
+import requests
+
 from flask import Flask
+
 app = Flask(__name__)
 
 START = time.time()
@@ -14,7 +21,11 @@ def elapsed():
 
 @app.route('/')
 def root():
-    return "Demo #54 (up %s, %s)\n" % (elapsed(), os.environ["BUILD_PROFILE"])
+    apihost = os.environ.get("APIHOST")
+
+    msg = requests.get("http://%s/message" % apihost).text
+
+    return "Demo #54 - %s! (up %s, %s)\n" % (msg, elapsed(), os.environ["BUILD_PROFILE"])
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8080)

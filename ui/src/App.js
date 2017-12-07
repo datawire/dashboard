@@ -183,7 +183,7 @@ class Poller extends React.Component {
     var count = 0;
     for (var j = 0; j < responses.length; j++) {
       var response = responses[j];
-      if (response.body.indexOf(profile) != -1) {
+      if (response.body.indexOf(profile) !== -1) {
         sum += response.latency;
         count += 1;
       }
@@ -245,9 +245,18 @@ const GridExampleCelled = () => (
 
 class App extends Component {
   render() {
+    // const background = process.env.BACKGROUND;
+    var background = "#f9634e40";
+
+    if (window.location.hostname == "dashboard.k736.net") {
+      background = "#62c2d740";
+    }
+
+    const bgstr = "linear-gradient(" + background + ", white)";
+
     return (
       <div className="app">
-        <div style={{height: "60px"}}/>
+        <div style={{height: "60px", background: bgstr}}/>
         <Image className="logo" centered size="small" src={logo} />
         <div style={{height: "60px"}}/>
         <div style={{width: "90%", margin: "0 auto"}}>

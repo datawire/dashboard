@@ -47,6 +47,9 @@ spec:
     spec:
       containers:
       - name: {{build.name}}
+        env:
+        - name: BUILD_PROFILE
+          value: {{build.profile.name}}
         image: {{build.images["Dockerfile"]}}
         imagePullPolicy: Always
         resources:
@@ -58,8 +61,4 @@ spec:
             cpu: {{build.profile.max_cpu}}
         ports:
         - name: http-api
-          containerPort: 3000
-        env:
-        - name: BACKGROUND
-          value: "#62c2d740"
-
+          containerPort: 8080

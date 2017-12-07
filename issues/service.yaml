@@ -1,23 +1,24 @@
 {% set sanitized_branch = (branch or "dev").replace('/', '-') %}
+{% set host_to_route = 'fdash.k736.net' %}
 
 name: issues
 namespace: dashboard
 
 profiles:
   stable:
-    host: dashboard.k736.net
+    host: {{host_to_route}}
     endpoint: /issues
     max_memory: 0.4G
     max_cpu: 0.5
   canary:
-    host: dashboard.k736.net
+    host: {{host_to_route}}
     endpoint: /issues
     weight: 50 # percentage of traffic to route to this class of deployment
     max_memory: 0.2G
     max_cpu: 0.25
   default:
     name: {{sanitized_branch}}
-    host: {{sanitized_branch}}-dashboard.k736.net
+    host: {{sanitized_branch}}-{{host_to_route}}
     endpoint: /issues
     max_memory: 0.2G
     max_cpu: 0.25

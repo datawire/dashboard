@@ -57,6 +57,8 @@ spec:
         env:
         - name: BUILD_PROFILE
           value: {{build.profile.name}}
+        - name: APIHOST
+          value: {{build.profile.host}}
         image: {{build.images["Dockerfile"]}}
         imagePullPolicy: Always
         resources:
@@ -69,3 +71,4 @@ spec:
         ports:
         - name: http-api
           containerPort: 8080
+
