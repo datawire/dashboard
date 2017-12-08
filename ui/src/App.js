@@ -233,11 +233,11 @@ const GridExampleCelled = () => (
     </Grid.Row>
 
     <Grid.Row>
-      <Grid.Column width={10}>
-        <Meter/>
-      </Grid.Column>
       <Grid.Column width={5}>
         <Poller endpoint="api"/>
+      </Grid.Column>
+      <Grid.Column width={10}>
+        <Meter/>
       </Grid.Column>
     </Grid.Row>
   </Grid>
