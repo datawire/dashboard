@@ -30,7 +30,7 @@ def root():
     else:
         msg = "oh dear (%d)" % response.status_code
 
-    return "Demo #64 - %s! (up %s, %s)\n" % (msg, elapsed(), os.environ["BUILD_PROFILE"])
+    return "Demo #65 - %s! (up %s, %s)\n" % (msg, elapsed(), os.environ["BUILD_PROFILE"])
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=8080)
