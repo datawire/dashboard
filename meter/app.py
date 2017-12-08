@@ -3,6 +3,8 @@
 import sys
 
 import os
+import re
+
 import requests
 
 from flask import Flask, jsonify
@@ -60,7 +62,7 @@ def fetch_prometheus(url):
 
 @app.route('/')
 def root():
-    routes_by_prefix = {}
+    route_info = {}
     clusters = {}
 
     overview = fetch(ambassador_url)
@@ -77,9 +79,23 @@ def root():
 
                 route_clusters[cluster_name] = cluster_weight
 
-            rinfo = routes_by_prefix.setdefault(prefix, {
+            host = None
+            headers = route.get('headers', [])
+
+            for header in headers:
+                hdr_name = header.get('name', None)
+
+                if hdr_name == ':authority':
+                    host = header.get('value', None)
+
+            route_key = (host, prefix)
+
+            rinfo = route_info.setdefault(route_key, {
                 'clusters': {}
             })
+
+            if host:
+                rinfo['host'] = host
 
             rinfo['clusters'].update(route_clusters)
 
@@ -113,21 +129,34 @@ def root():
         'routes': {}
     }
 
-    for pfx in routes_by_prefix.keys():
+    for host, prefix in route_info.keys():
         pfx_info = {
             'clusters': {}
         }
 
-        route_clusters = routes_by_prefix[pfx]['clusters']
+        rinfo = route_info[(host, prefix)]
+        route_clusters = rinfo['clusters']
 
         for cluster_name in sorted(route_clusters.keys()):
             if cluster_name in clusters:
-                pfx_info['clusters'][cluster_name] = {
+                trimmed_cluster_name = cluster_name
+
+                trimmed_cluster_name = re.sub(r'^cluster_', '', trimmed_cluster_name)
+                trimmed_cluster_name = re.sub(r'_dashboard_svc_cluster_local', '', trimmed_cluster_name)
+                trimmed_cluster_name = re.sub(r'_dashboard', '', trimmed_cluster_name)
+
+                if trimmed_cluster_name.startswith('127_0_0_1_'):
+                    continue
+
+                trimmed_cluster_name = trimmed_cluster_name.replace('_', '-')
+
+                pfx_info['clusters'][trimmed_cluster_name] = {
                     'weight': route_clusters[cluster_name],
                     'count': clusters[cluster_name]
                 }
 
-        final['routes'][pfx] = pfx_info
+        url = "//%s%s" % (host if host else "*", prefix)
+        final['routes'][url] = pfx_info
 
     return jsonify(final)
 
