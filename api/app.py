@@ -21,9 +21,14 @@ def elapsed():
 
 @app.route('/')
 def root():
-    apihost = os.environ.get("APIHOST")
+    msgurl = os.environ.get("MESSAGEURL")
+    response = requests.get(msgurl)
+    msg = "no message??"
 
-    msg = requests.get("http://%s/message" % apihost).text
+    if response.status_code == 200:
+        msg = response.text
+    else:
+        msg = "oh dear (%d)" % response.status_code
 
     return "Demo #56 - %s! (up %s, %s)\n" % (msg, elapsed(), os.environ["BUILD_PROFILE"])
 

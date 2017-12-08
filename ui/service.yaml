@@ -1,5 +1,5 @@
 {% set sanitized_branch = (branch or "dev").replace('/', '-') %}
-{% set host_to_route = env.HOST_TO_ROUTE or 'dashboard.k736.net' %}
+{% set host_to_route = env.get('HOST_TO_ROUTE', 'dashboard.k736.net') %}
 
 name: ui
 namespace: dashboard

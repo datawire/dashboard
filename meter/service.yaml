@@ -1,5 +1,5 @@
 {% set sanitized_branch = (branch or "dev").replace('/', '-') %}
-{% set host_to_route = 'fdash.k736.net' %}
+{% set host_to_route = env.get('HOST_TO_ROUTE', 'dashboard.k736.net') %}
 
 name: meter
 namespace: dashboard

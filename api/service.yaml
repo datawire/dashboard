@@ -1,8 +1,10 @@
 {% set sanitized_branch = (branch or "dev").replace('/', '-') %}
-{% set host_to_route = 'fdash.k736.net' %}
+{% set host_to_route = env.get('HOST_TO_ROUTE', 'dashboard.k736.net') %}
+{% set apihost_scheme = env.get('APIHOST_SCHEME', 'https') %}
 
 name: api
 namespace: dashboard
+apihost_scheme: {{apihost_scheme}}
 
 profiles:
   stable:

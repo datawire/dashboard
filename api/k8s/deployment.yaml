@@ -55,10 +55,12 @@ spec:
       containers:
       - name: {{build.name}}
         env:
+        - name: MESSAGEURL
+          value: http://message-{{build.profile.name}}/
         - name: BUILD_PROFILE
           value: {{build.profile.name}}
-        - name: APIHOST
-          value: {{build.profile.host}}
+        - name: APIURL
+          value: {{service.apihost_scheme}}://{{build.profile.host}}
         image: {{build.images["Dockerfile"]}}
         imagePullPolicy: Always
         resources:
