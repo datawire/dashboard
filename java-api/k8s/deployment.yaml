@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{build.name}}
+  {%- if "endpoint" in build.profile %}
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v0
+      kind: Mapping
+      name: {{build.name}}-mapping
+      host: {{build.profile.host}}
+      prefix: {{build.profile.endpoint}}
+      service: {{build.name}}.{{service.namespace}}.svc.cluster.local
+      {%- if "weight" in build.profile %}
+      weight: {{build.profile.weight}}
+      {%- endif %}
+    {%- endif %}
+spec:
+  selector:
+    app: {{build.name}}
+  ports:
+    - protocol: {{service.protocol|default('TCP')}}
+      port: {{service.port|default('80')}}
+      targetPort: {{service.targetPort|default('8080')}}
+  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: {name: {{build.name}}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{build.name}}
+  strategy:
+    rollingUpdate: {maxSurge: 1, maxUnavailable: 0}
+    type: RollingUpdate
+  revisionHistoryLimit: 1
+  template:
+    metadata:
+      labels:
+        app: {{build.name}}
+      name: {{build.name}}
+    spec:
+      containers:
+      - image: {{build.images["Dockerfile"]}}
+        imagePullPolicy: IfNotPresent
+        name: {{build.name}}
+        resources:
+          requests:
+            memory: {{build.profile.min_memory|default(0.1)}}
+            cpu: {{build.profile.min_cpu|default(0.1)}}
+          limits:
+            memory: {{build.profile.max_memory}}
+            cpu: {{build.profile.max_cpu}}
+        terminationMessagePath: /dev/termination-log
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
