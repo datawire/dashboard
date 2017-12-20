@@ -2,7 +2,7 @@
 {% set host_to_route = env.get('HOST_TO_ROUTE', 'dashboard.k736.net') %}
 {% set apihost_scheme = env.get('APIHOST_SCHEME', 'https') %}
 
-name: hello-spark
+name: java-api
 namespace: dashboard
 apihost_scheme: {{apihost_scheme}}
 
@@ -21,12 +21,12 @@ containers:
 
 profiles:
   stable:
-    endpoint: {{host_to_route}}
+    host: {{host_to_route}}
     endpoint: /java-api
     max_memory: 0.25G
     max_cpu: 0.25
   canary:
-    name: {{host_to_route}}
+    host: {{host_to_route}}
     endpoint: /java-api
     weight: 50.0 # percentage of traffic to route to this class of deployment
     max_memory: 0.25G
