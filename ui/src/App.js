@@ -3,7 +3,7 @@ import logo from './jetpack.svg';
 import './App.css';
 
 import 'semantic-ui-css/semantic.min.css';
-import { Card, Grid, Image, Table } from 'semantic-ui-react';
+import { Card, Grid, Image, Tab, Table } from 'semantic-ui-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 // Source: https://weeknumber.net/how-to/javascript
@@ -136,7 +136,7 @@ class Meter extends React.Component {
       for (var j = 0; j < ckeys.length; j++) {
         var cluster = clusters[ckeys[j]];
         rows.push(
-          <Table.Row>
+          <Table.Row key={(i+1)*(j+1)}>
             <Table.Cell>{keys[i]}</Table.Cell>
             <Table.Cell>{ckeys[j]}</Table.Cell>
             <Table.Cell>{cluster.weight}</Table.Cell>
@@ -220,7 +220,7 @@ class Poller extends React.Component {
   render() {
     var items = [];
     for (var i = this.state.responses.length - 1; i >= 0; i--) {
-      items.push(<p>{this.state.responses[i].body}</p>);
+      items.push(<p key={i}>{this.state.responses[i].body}</p>);
       if (items.length > 2) {
         break;
       }
@@ -231,13 +231,19 @@ class Poller extends React.Component {
 
     return (
         <Card centered>
-          <Card.Content header>{this.props.endpoint}</Card.Content>
-          <Card.Content description>{items}</Card.Content>
+          <Card.Content>{this.props.endpoint}</Card.Content>
+          <Card.Content>{items}</Card.Content>
           <Card.Content extra>latency: {stable}, {canary}</Card.Content>
         </Card>
     );
   }
 }
+
+const panes = [
+  { menuItem: 'Python', render: () => <Tab.Pane key={1}><Poller endpoint="api"/></Tab.Pane> },
+  { menuItem: 'Java Spring', render: () => <Tab.Pane key={2}><Poller endpoint="java-spring-api"/></Tab.Pane> },
+  { menuItem: 'Java Spark', render: () => <Tab.Pane key={3}><Poller endpoint="java-api"/></Tab.Pane> },
+]
 
 const GridExampleCelled = () => (
   <Grid celled columns={15}>
@@ -255,7 +261,7 @@ const GridExampleCelled = () => (
 
     <Grid.Row>
       <Grid.Column width={5}>
-        <Poller endpoint="api"/>
+        <Tab panes={panes} />
       </Grid.Column>
       <Grid.Column width={10}>
         <Meter/>
@@ -269,7 +275,7 @@ class App extends Component {
     // const background = process.env.BACKGROUND;
     var background = "#f9634e40";
 
-    if (window.location.hostname == "dashboard.k736.net") {
+    if (window.location.hostname === "dashboard.k736.net") {
       background = "#62c2d740";
     }
 
