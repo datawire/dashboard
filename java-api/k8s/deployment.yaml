@@ -56,6 +56,9 @@ spec:
       - image: {{build.images["Dockerfile"]}}
         imagePullPolicy: IfNotPresent
         name: {{build.name}}
+        env:
+        - name: BUILD_PROFILE
+          value: {{build.profile.name}}
         resources:
           requests:
             memory: {{build.profile.min_memory|default(0.1)}}
