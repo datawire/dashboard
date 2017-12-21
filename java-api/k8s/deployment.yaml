@@ -27,9 +27,8 @@ spec:
   selector:
     app: {{build.name}}
   ports:
-    - protocol: {{service.protocol|default('TCP')}}
-      port: {{service.port|default('80')}}
-      targetPort: {{service.targetPort|default('8080')}}
+    - targetPort: http-api
+      port: 80
   type: ClusterIP
 ---
 apiVersion: extensions/v1beta1
@@ -66,6 +65,9 @@ spec:
           limits:
             memory: {{build.profile.max_memory}}
             cpu: {{build.profile.max_cpu}}
+        ports:
+        - name: http-api
+          containerPort: 8080
         terminationMessagePath: /dev/termination-log
       dnsPolicy: ClusterFirst
       restartPolicy: Always
