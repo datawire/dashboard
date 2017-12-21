@@ -13,11 +13,11 @@ public class Hello {
         ipAddress("0.0.0.0");
 
         get("/", (req, res) -> {
-            long elapsed = System.currentTimeMillis() - start;
-            String uptime = String.format("%d:%d:%d",
-                                          TimeUnit.MILLISECONDS.toHours(elapsed),
-                                          TimeUnit.MILLISECONDS.toMinutes(elapsed),
-                                          TimeUnit.MILLISECONDS.toSeconds(elapsed));
+            long millis = System.currentTimeMillis() - start;
+            String uptime = String.format("%02d:%02d",
+                                          TimeUnit.MILLISECONDS.toMinutes(millis),
+                                          TimeUnit.MILLISECONDS.toSeconds(millis) -
+                                          TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
             return String.format("Hello, Spark! (up %s, %s)", uptime, System.getenv("BUILD_PROFILE"));
         });
     }
