@@ -32,6 +32,7 @@ profiles:
   default:
     name: {{sanitized_branch}}
     host: {{sanitized_branch}}-{{host_to_route}}
+    endpoint: /java-spring-api
     max_memory: 0.1G
     max_cpu: 0.1
 
