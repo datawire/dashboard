@@ -2,3 +2,12 @@
 forge.yaml
 *~
 telepresence.log
+
+# --- Intellij IDEA ---
+.idea 
+*.iml
+out
+
+# --- Gradle ---
+.gradle
+build

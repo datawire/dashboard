@@ -1,4 +1,4 @@
-FROM openjdk:alpine
+FROM openjdk:8-jdk-slim
 WORKDIR /code
 COPY . ./
 RUN ./gradlew package
