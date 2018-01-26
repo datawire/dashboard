@@ -99,30 +99,30 @@ def root():
 
             rinfo['clusters'].update(route_clusters)
 
-    results = fetch_prometheus(prometheus_url)
-
-    for result in results:
-        metric = result['metric']
-        cluster_name = metric['cluster']
-
-        value = result['value']
-        timestamp = value[0]
-
-        try:
-            count = int(value[1])
-        except ValueError:
-            print("WTF? not an int: '%s'" % value[1])
-            count = None
-
-        if count == None:
-            continue
-
-        print("cluster %s count %d" % (cluster_name, count))
-
-        if cluster_name not in clusters:
-            clusters[cluster_name] = 0
-
-        clusters[cluster_name] += count
+    # results = fetch_prometheus(prometheus_url)
+    #
+    # for result in results:
+    #     metric = result['metric']
+    #     cluster_name = metric['cluster']
+    #
+    #     value = result['value']
+    #     timestamp = value[0]
+    # 
+    #     try:
+    #         count = int(value[1])
+    #     except ValueError:
+    #         print("WTF? not an int: '%s'" % value[1])
+    #         count = None
+    #
+    #     if count == None:
+    #         continue
+    #
+    #     print("cluster %s count %d" % (cluster_name, count))
+    #
+    #     if cluster_name not in clusters:
+    #         clusters[cluster_name] = 0
+    #
+    #     clusters[cluster_name] += count
 
     final = {
         'profile': os.environ.get("BUILD_PROFILE", "none"),
